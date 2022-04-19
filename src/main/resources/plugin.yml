@@ -1,0 +1,10 @@
+name: RPlace
+version: '${project.version}'
+main: me.evilterabite.rplace.RPlace
+api-version: 1.18
+authors: [ evilterabite ]
+description: Reddit's R/Place subreddit from 2017 and 2022 in Minecraft
+
+commands:
+  canvas:
+    description: Gives you the Canvas Creator Axe
