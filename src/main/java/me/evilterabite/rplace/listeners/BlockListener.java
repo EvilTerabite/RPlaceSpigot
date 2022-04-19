@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.awt.*;
@@ -61,6 +62,13 @@ public class BlockListener implements Listener {
                     player.sendMessage("You can only place one block every 2mins!");
                 }
             }
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    void onDropItem(PlayerDropItemEvent event) {
+        if(RPlace.playersInCanvas.contains(event.getPlayer().getUniqueId())) {
             event.setCancelled(true);
         }
     }
