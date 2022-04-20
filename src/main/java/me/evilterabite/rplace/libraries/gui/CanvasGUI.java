@@ -74,7 +74,6 @@ public class CanvasGUI implements Listener {
             inv.setItem(6, createCanvas);
             inv.setItem(2, new ItemStack(Material.AIR));
             inv.setItem(4, new ItemStack(Material.AIR));
-            inv.setItem(6, new ItemStack(Material.AIR));
         }
 
     }
