@@ -11,7 +11,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.awt.*;
@@ -36,28 +40,33 @@ public class BlockListener implements Listener {
         if(RPlace.playersInCanvas.contains(player.getUniqueId())) {
             if(RPlace.whitelistedBlocks.contains(block.getType())) {
                 if(!RPlace.timedPlayers.contains(player.getUniqueId())) {
-                    Objects.requireNonNull(Bukkit.getWorld("world")).getBlockAt(block.getLocation().subtract(0, 1, 0)).setType(block.getType());
-                    RPlace.timedPlayers.add(player.getUniqueId());
-                    Bukkit.getScheduler().runTaskLater(RPlace.getPlugin(RPlace.class), () -> {
-                        RPlace.timedPlayers.remove(player.getUniqueId());
-                    }, 20L * RPlace.canvas.getPlaceBlockTimer());
+                    if(RPlace.canvasZone.contains(block.getLocation())) {
+                        Objects.requireNonNull(Bukkit.getWorld("world")).getBlockAt(block.getLocation().subtract(0, 1, 0)).setType(block.getType());
+                        RPlace.timedPlayers.add(player.getUniqueId());
+                        Bukkit.getScheduler().runTaskLater(RPlace.getPlugin(RPlace.class), () -> {
+                            RPlace.timedPlayers.remove(player.getUniqueId());
+                        }, 20L * RPlace.canvas.getPlaceBlockTimer());
 
-                    new BukkitRunnable() {
-                        int time = RPlace.canvas.getPlaceBlockTimer();
-                        @Override
-                        public void run() {
-                            int mins = (time%3600)/60;
-                            int seconds = time % 60;
-                            if(time == 0) {
-                                cancel();
-                            } else {
-                                if(RPlace.playersInCanvas.contains(player.getUniqueId())) {
-                                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(String.format("%02d:%02d", mins, seconds), ChatColor.DARK_BLUE));
+                        new BukkitRunnable() {
+                            int time = RPlace.canvas.getPlaceBlockTimer();
+
+                            @Override
+                            public void run() {
+                                int mins = (time % 3600) / 60;
+                                int seconds = time % 60;
+                                if (time == 0) {
+                                    cancel();
+                                } else {
+                                    if (RPlace.playersInCanvas.contains(player.getUniqueId())) {
+                                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(String.format("%02d:%02d", mins, seconds), ChatColor.DARK_BLUE));
+                                    }
+                                    time--;
                                 }
-                                time--;
                             }
-                        }
-                    }.runTaskTimer(RPlace.getPlugin(RPlace.class), 0L, 20L);
+                        }.runTaskTimer(RPlace.getPlugin(RPlace.class), 0L, 20L);
+                    } else {
+                        player.sendMessage("You cannot place blocks outside of the canvas!");
+                    }
                 } else {
                     player.sendMessage("You can only place one block every 2mins!");
                 }
@@ -70,6 +79,25 @@ public class BlockListener implements Listener {
     void onDropItem(PlayerDropItemEvent event) {
         if(RPlace.playersInCanvas.contains(event.getPlayer().getUniqueId())) {
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    void onPickupItem(EntityPickupItemEvent event) {
+        if(event.getEntity() instanceof Player) {
+            Player player = (Player) event.getEntity();
+            if(RPlace.playersInCanvas.contains(player.getUniqueId())) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    void onInventoryOpenOutsideOfCanvas(InventoryOpenEvent event) {
+        if(event.getInventory().getType() != InventoryType.PLAYER) {
+            if(RPlace.playersInCanvas.contains(event.getPlayer().getUniqueId())) {
+                event.setCancelled(true);
+            }
         }
     }
 }
