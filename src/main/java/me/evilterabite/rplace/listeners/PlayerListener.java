@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerListener implements Listener {
 
@@ -23,6 +24,13 @@ public class PlayerListener implements Listener {
             if(!RPlace.canvasZone.contains(player.getLocation())) {
                 Bukkit.getPluginManager().callEvent(new PlayerLeaveCanvasEvent(player));
             }
+        }
+    }
+
+    @EventHandler
+    void onPlayerDisconnect(PlayerQuitEvent event) {
+        if(RPlace.playersInCanvas.contains(event.getPlayer().getUniqueId())) {
+            CanvasListener.restorePlayerContents(event.getPlayer());
         }
     }
 }

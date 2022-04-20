@@ -2,6 +2,7 @@ package me.evilterabite.rplace.commands;
 
 import me.evilterabite.rplace.RPlace;
 import me.evilterabite.rplace.libraries.Canvas;
+import me.evilterabite.rplace.libraries.gui.CanvasGUI;
 import me.evilterabite.rplace.utils.C;
 import me.evilterabite.rplace.utils.ItemCreator;
 import me.evilterabite.rplace.utils.Zone;
@@ -37,16 +38,7 @@ public class CanvasCommand implements CommandExecutor, Listener {
         if(sender instanceof Player) {
             Player player = (Player) sender;
             if(player.hasPermission("rplace.admin")) {
-                if(args.length >= 1) {
-                    switch (args[0]) {
-                        case "setpos1": posList.set(0, player.getLocation().subtract(0, 1, 0)); break;
-                        case "setpos2": posList.set(1, player.getLocation().subtract(0, 1, 0)); break;
-                        case "timer": RPlace.canvas.setPlaceBlockTimer(Integer.parseInt(args[1])); break;
-                        case "reset": RPlace.canvas.reset(); break;
-                        case "remove": RPlace.canvas.remove(); break;
-                        case "create": createCanvas(); break;
-                    }
-                }
+                RPlace.canvasGUI.open(player);
             } else {
                 C.noPermission(sender);
             }
@@ -77,8 +69,8 @@ public class CanvasCommand implements CommandExecutor, Listener {
     }
 
     private void createCanvas() {
-        if(posList.size() == 2) {
-            Canvas canvas = new Canvas("test", new Zone(posList.get(0), posList.get(1)), 120);
+        if (posList.size() == 2) {
+            Canvas canvas = new Canvas("test", new Zone(posList.get(0), posList.get(1)));
             canvas.create();
         }
     }

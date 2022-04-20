@@ -1,8 +1,8 @@
 package me.evilterabite.rplace.libraries;
 
 import me.evilterabite.rplace.RPlace;
-import me.evilterabite.rplace.commands.CanvasCommand;
 import me.evilterabite.rplace.events.CanvasCreateEvent;
+import me.evilterabite.rplace.libraries.gui.CanvasGUI;
 import me.evilterabite.rplace.utils.Zone;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -21,10 +21,10 @@ public class Canvas {
     private int placeBlockTimer;
     private List<Block> resetBlockList;
 
-    public Canvas(String name, Zone zone, int placeBlockTimer) {
+    public Canvas(String name, Zone zone) {
         this.name = name;
         this.zone = zone;
-        this.placeBlockTimer = placeBlockTimer;
+        this.placeBlockTimer = RPlace.getInstance().getConfig().getInt("place_timer");
     }
 
     public Zone getZone() {
@@ -51,11 +51,15 @@ public class Canvas {
         reset();
         store();
         RPlace.canvas = this;
-        RPlace.canvasZone = new Zone(CanvasCommand.posList.get(0).subtract(0, 50, 0), CanvasCommand.posList.get(1).add(0, 50, 0));
+        RPlace.canvasZone = new Zone(
+                new Location(zone.getWorld(), zone.getMaxX(), zone.getMaxY() + 50, zone.getMaxZ()),
+                new Location(zone.getWorld(), zone.getMinX(), zone.getMinY() - 50, zone.getMinZ())
+        );
         Bukkit.getPluginManager().callEvent(new CanvasCreateEvent(this));
     }
 
     public void recover() {
+        RPlace.getInstance().reloadConfig();
         RPlace.canvas = this;
         RPlace.canvasZone = new Zone(
                 new Location(zone.getWorld(), zone.getMinX(), zone.getMinY() - 50, zone.getMinZ()),
@@ -98,7 +102,7 @@ public class Canvas {
                     Integer.parseInt(rawZone.get(6)));
             int placeBlockTimer = Integer.parseInt(rawCanvas.get(2));
 
-            return new Canvas(name, zone, placeBlockTimer);
+            return new Canvas(name, zone);
         }
 
         return null;
@@ -106,6 +110,8 @@ public class Canvas {
 
     public void remove() {
         if(RPlace.canvas != null);
+        RPlace.canvasGUI.posOne = null;
+        RPlace.canvasGUI.posTwo = null;
         List<Block> canvasBlocks = zone.select();
         for(Block b : canvasBlocks) {
             b.setType(Material.AIR);

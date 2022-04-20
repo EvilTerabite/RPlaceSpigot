@@ -2,6 +2,7 @@ package me.evilterabite.rplace;
 
 import me.evilterabite.rplace.commands.CanvasCommand;
 import me.evilterabite.rplace.libraries.Canvas;
+import me.evilterabite.rplace.libraries.gui.CanvasGUI;
 import me.evilterabite.rplace.listeners.BlockListener;
 import me.evilterabite.rplace.listeners.CanvasListener;
 import me.evilterabite.rplace.listeners.PlayerListener;
@@ -22,6 +23,7 @@ import java.util.logging.Level;
 public final class RPlace extends JavaPlugin {
 
     public static Canvas canvas;
+    public static CanvasGUI canvasGUI;
     public static Zone canvasZone;
     public static ArrayList<UUID> playersInCanvas;
     public static ArrayList<UUID> timedPlayers;
@@ -29,9 +31,11 @@ public final class RPlace extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        canvasGUI = new CanvasGUI();
         saveDefaultConfig();
         if(!Objects.requireNonNull(getConfig().getString("canvas")).equalsIgnoreCase("null")) {
             canvas = Canvas.deserialize(Objects.requireNonNull(getConfig().getString("canvas")));
+            assert canvas != null;
             canvas.recover();
         }
         whitelistedBlocks = new ArrayList<>();
