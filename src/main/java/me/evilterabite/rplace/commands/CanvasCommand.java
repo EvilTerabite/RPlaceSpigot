@@ -5,7 +5,6 @@ import me.evilterabite.rplace.libraries.Canvas;
 import me.evilterabite.rplace.utils.C;
 import me.evilterabite.rplace.utils.ItemCreator;
 import me.evilterabite.rplace.utils.Zone;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,7 +17,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +43,7 @@ public class CanvasCommand implements CommandExecutor, Listener {
                         case "setpos2": posList.set(1, player.getLocation().subtract(0, 1, 0)); break;
                         case "timer": RPlace.canvas.setPlaceBlockTimer(Integer.parseInt(args[1])); break;
                         case "reset": RPlace.canvas.reset(); break;
+                        case "remove": RPlace.canvas.remove(); break;
                         case "create": createCanvas(); break;
                     }
                 }

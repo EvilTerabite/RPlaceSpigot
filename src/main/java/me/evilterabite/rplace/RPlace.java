@@ -74,4 +74,8 @@ public final class RPlace extends JavaPlugin {
         pm.registerEvents(new CanvasCommand(), this);
         pm.registerEvents(new BlockListener(), this);
     }
+
+    public static RPlace getInstance() {
+        return RPlace.getPlugin(RPlace.class);
+    }
 }

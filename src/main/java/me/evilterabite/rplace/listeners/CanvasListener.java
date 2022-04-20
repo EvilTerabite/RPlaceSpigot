@@ -19,6 +19,7 @@ public class CanvasListener implements Listener {
 
     @EventHandler
     void onEnterCanvas(PlayerEnterCanvasEvent event) {
+        if(RPlace.canvas == null) return;
         RPlace.playersInCanvas.add(event.getPlayer().getUniqueId());
 
         storePlayerContents(event.getPlayer());
@@ -40,6 +41,7 @@ public class CanvasListener implements Listener {
 
     @EventHandler
     void onLeaveCanvas(PlayerLeaveCanvasEvent event) {
+        if(RPlace.canvas == null) return;
         RPlace.playersInCanvas.remove(event.getPlayer().getUniqueId());
 
         restorePlayerContents(event.getPlayer());
@@ -55,6 +57,7 @@ public class CanvasListener implements Listener {
     }
 
     public static void restorePlayerContents(Player player) {
+        if(RPlace.canvas == null) return;
         player.getInventory().clear();
         if(playerInventoryMap.containsKey(player.getUniqueId())) {
             player.getInventory().setContents(playerInventoryMap.get(player.getUniqueId()));
