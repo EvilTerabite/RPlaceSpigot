@@ -25,9 +25,9 @@ public class BlockListener implements Listener {
 
     @EventHandler
     void onBlockBreak(BlockBreakEvent event) {
-        if(RPlace.canvas == null) return;
+        if (RPlace.canvas == null) return;
         Block block = event.getBlock();
-        if(RPlace.canvas.getZone().contains(block.getLocation())) {
+        if (RPlace.canvas.getZone().contains(block.getLocation())) {
             event.getPlayer().sendMessage("This block is part of the canvas and cannot be broken!");
             event.setCancelled(true);
         }
@@ -37,10 +37,10 @@ public class BlockListener implements Listener {
     void onBlockPlace(BlockPlaceEvent event) {
         Block block = event.getBlock();
         Player player = event.getPlayer();
-        if(RPlace.playersInCanvas.contains(player.getUniqueId())) {
-            if(RPlace.whitelistedBlocks.contains(block.getType())) {
-                if(!RPlace.timedPlayers.contains(player.getUniqueId())) {
-                    if(RPlace.canvasZone.contains(block.getLocation())) {
+        if(RPlace.canvasZone.contains(block.getLocation())) {
+            if(RPlace.playersInCanvas.contains(player.getUniqueId())) {
+                if(RPlace.whitelistedBlocks.contains(block.getType())) {
+                    if (!RPlace.timedPlayers.contains(player.getUniqueId())) {
                         Objects.requireNonNull(Bukkit.getWorld("world")).getBlockAt(block.getLocation().subtract(0, 1, 0)).setType(block.getType());
                         RPlace.timedPlayers.add(player.getUniqueId());
                         Bukkit.getScheduler().runTaskLater(RPlace.getPlugin(RPlace.class), () -> {
@@ -65,15 +65,18 @@ public class BlockListener implements Listener {
                             }
                         }.runTaskTimer(RPlace.getPlugin(RPlace.class), 0L, 20L);
                     } else {
-                        player.sendMessage("You cannot place blocks outside of the canvas!");
+                        player.sendMessage("You can only place one block every 2mins!");
                     }
-                } else {
-                    player.sendMessage("You can only place one block every 2mins!");
                 }
+            } else {
+                player.sendMessage("You cannot place blocks inside the canvas from the outside... You need to be on the canvas to place blocks.");
             }
-            event.setCancelled(true);
+        } else {
+            player.sendMessage("You cannot place blocks outside of the canvas!");
         }
+        event.setCancelled(true);
     }
+
 
     @EventHandler
     void onDropItem(PlayerDropItemEvent event) {
