@@ -19,6 +19,7 @@ public class Canvas {
     private String name;
     private Zone zone;
     private int placeBlockTimer;
+    private List<Block> resetBlockList;
 
     public Canvas(String name, Zone zone, int placeBlockTimer) {
         this.name = name;
@@ -78,9 +79,9 @@ public class Canvas {
     }
 
     public void store() {
+        RPlace.getInstance().getConfig().set("place_timer", placeBlockTimer);
         RPlace.getPlugin(RPlace.class).getConfig().set("canvas", this.toString());
         RPlace.getPlugin(RPlace.class).saveConfig();
-
     }
 
     public static Canvas deserialize(String serializedCanvas) {
@@ -101,6 +102,20 @@ public class Canvas {
         }
 
         return null;
+    }
+
+    public void remove() {
+        if(RPlace.canvas != null);
+        List<Block> canvasBlocks = zone.select();
+        for(Block b : canvasBlocks) {
+            b.setType(Material.AIR);
+        }
+        RPlace core = RPlace.getInstance();
+        core.getConfig().set("canvas", "null");
+        core.saveConfig();
+        core.reloadConfig();
+        RPlace.canvas = null;
+        RPlace.canvasZone = null;
     }
 
     @Override

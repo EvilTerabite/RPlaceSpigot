@@ -35,13 +35,14 @@ public class BlockListener implements Listener {
 
     @EventHandler
     void onBlockPlace(BlockPlaceEvent event) {
+        if(RPlace.canvas == null) return;
         Block block = event.getBlock();
         Player player = event.getPlayer();
         if(RPlace.canvasZone.contains(block.getLocation())) {
             if(RPlace.playersInCanvas.contains(player.getUniqueId())) {
                 if(RPlace.whitelistedBlocks.contains(block.getType())) {
                     if (!RPlace.timedPlayers.contains(player.getUniqueId())) {
-                        Objects.requireNonNull(Bukkit.getWorld("world")).getBlockAt(block.getLocation().subtract(0, 1, 0)).setType(block.getType());
+                        Objects.requireNonNull(RPlace.canvas.getZone().getWorld()).getBlockAt(block.getLocation().subtract(0, 1, 0)).setType(block.getType());
                         RPlace.timedPlayers.add(player.getUniqueId());
                         Bukkit.getScheduler().runTaskLater(RPlace.getPlugin(RPlace.class), () -> {
                             RPlace.timedPlayers.remove(player.getUniqueId());
@@ -65,7 +66,8 @@ public class BlockListener implements Listener {
                             }
                         }.runTaskTimer(RPlace.getPlugin(RPlace.class), 0L, 20L);
                     } else {
-                        player.sendMessage("You can only place one block every 2mins!");
+                        int seconds = RPlace.getInstance().getConfig().getInt("place_timer");
+                        player.sendMessage("You can only place a block every " + seconds + "secs!");
                     }
                 }
             } else {
@@ -80,6 +82,7 @@ public class BlockListener implements Listener {
 
     @EventHandler
     void onDropItem(PlayerDropItemEvent event) {
+        if(RPlace.canvas == null) return;
         if(RPlace.playersInCanvas.contains(event.getPlayer().getUniqueId())) {
             event.setCancelled(true);
         }
@@ -87,6 +90,7 @@ public class BlockListener implements Listener {
 
     @EventHandler
     void onPickupItem(EntityPickupItemEvent event) {
+        if(RPlace.canvas == null) return;
         if(event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             if(RPlace.playersInCanvas.contains(player.getUniqueId())) {
@@ -97,6 +101,7 @@ public class BlockListener implements Listener {
 
     @EventHandler
     void onInventoryOpenOutsideOfCanvas(InventoryOpenEvent event) {
+        if(RPlace.canvas == null) return;
         if(event.getInventory().getType() != InventoryType.PLAYER) {
             if(RPlace.playersInCanvas.contains(event.getPlayer().getUniqueId())) {
                 event.setCancelled(true);
