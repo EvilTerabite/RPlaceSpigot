@@ -40,11 +40,9 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
-        RPlace.getInstance().getLogger().log(Level.SEVERE, "You should not let players change worlds while on the canvas! This can cause major issues.");
         if(event.getFrom() == RPlace.canvas.getZone().getWorld()) {
-            System.out.println(1);
             if (RPlace.playersInCanvas.contains(event.getPlayer().getUniqueId())) {
-                System.out.println(2);
+                RPlace.getInstance().getLogger().log(Level.SEVERE, "You should not let players change worlds while on the canvas! This can cause major issues.");
                 Bukkit.getPluginManager().callEvent(new PlayerLeaveCanvasEvent(event.getPlayer()));
             }
         }

@@ -1,8 +1,10 @@
 package me.evilterabite.rplace;
 
 import me.evilterabite.rplace.commands.CanvasCommand;
+import me.evilterabite.rplace.commands.PaletteCommand;
 import me.evilterabite.rplace.libraries.Canvas;
 import me.evilterabite.rplace.libraries.gui.CanvasGUI;
+import me.evilterabite.rplace.libraries.gui.PaletteGUI;
 import me.evilterabite.rplace.listeners.BlockListener;
 import me.evilterabite.rplace.listeners.CanvasListener;
 import me.evilterabite.rplace.listeners.PlayerListener;
@@ -24,6 +26,7 @@ public final class RPlace extends JavaPlugin {
 
     public static Canvas canvas;
     public static CanvasGUI canvasGUI;
+    public static PaletteGUI paletteGUI;
     public static Zone canvasZone;
     public static ArrayList<UUID> playersInCanvas;
     public static ArrayList<UUID> timedPlayers;
@@ -39,6 +42,7 @@ public final class RPlace extends JavaPlugin {
             }
         });
         canvasGUI = new CanvasGUI();
+        paletteGUI = new PaletteGUI();
         saveDefaultConfig();
         if(!Objects.requireNonNull(getConfig().getString("canvas")).equalsIgnoreCase("null")) {
             canvas = Canvas.deserialize(Objects.requireNonNull(getConfig().getString("canvas")));
@@ -51,27 +55,17 @@ public final class RPlace extends JavaPlugin {
         registerCommands();
         registerListeners();
 
+        for(String s : getConfig().getStringList("canvas_blocks")) {
+            Material mat = null;
+            try {
+                mat = Material.getMaterial(s);
+            } catch (NullPointerException e) {
+                getLogger().log(Level.SEVERE, "There is an error with the canvas_blocks list! Check the config to make sure you set it up correctly!");
+                e.printStackTrace();
+            }
 
-        whitelistedBlocks.addAll(Arrays.asList(
-                Material.CYAN_WOOL,
-                Material.PURPLE_WOOL,
-                Material.BLUE_WOOL,
-                Material.BROWN_WOOL,
-                Material.GREEN_WOOL,
-                Material.RED_WOOL,
-                Material.BLACK_WOOL,
-                Material.GRAY_WOOL,
-                Material.LIGHT_GRAY_WOOL,
-                Material.WHITE_WOOL,
-                Material.ORANGE_WOOL,
-                Material.PINK_WOOL,
-                Material.LIGHT_BLUE_WOOL,
-                Material.YELLOW_WOOL,
-                Material.LIME_WOOL,
-                Material.MAGENTA_WOOL
-
-                )
-        );
+            whitelistedBlocks.add(mat);
+        }
 
     }
 
@@ -85,6 +79,7 @@ public final class RPlace extends JavaPlugin {
 
     private void registerCommands() {
         Objects.requireNonNull(getCommand("canvas")).setExecutor(new CanvasCommand());
+        Objects.requireNonNull(getCommand("palette")).setExecutor(new PaletteCommand());
     }
 
     private void registerListeners() {

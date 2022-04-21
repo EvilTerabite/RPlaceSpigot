@@ -9,6 +9,7 @@ import me.evilterabite.rplace.utils.Zone;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -26,52 +27,45 @@ import java.util.Objects;
 
 public class CanvasCommand implements CommandExecutor, Listener {
 
-    public static final ItemStack canvasCreatorItem = ItemCreator.create(
-            Material.WOODEN_AXE,
-            ChatColor.YELLOW + "Canvas Creator Axe",
-            new ArrayList<>(Arrays.asList("Left click for pos 1", "Right click for pos 2")));
-
-    public static final List<Location> posList = new ArrayList<>(Arrays.asList(null, null));
+    public static final ItemStack modItem = ItemCreator.create(Material.NETHERITE_AXE, ChatColor.RED + "Canvas Moderator Axe","Set any block back to white concrete!");
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(sender instanceof Player) {
             Player player = (Player) sender;
-            if(player.hasPermission("rplace.admin")) {
-                RPlace.canvasGUI.open(player);
-            } else {
-                C.noPermission(sender);
+            if (player.hasPermission("rplace.moderator")) {
+                if (args.length == 1) {
+                    if (args[0].equalsIgnoreCase("mod")) {
+                        if(RPlace.playersInCanvas.contains(player.getUniqueId())) {
+                            player.getInventory().setItem(8, modItem);
+                            return true;
+                        } else {
+                            player.sendMessage(ChatColor.RED + "[RPlace Moderation] You must be on the canvas when running the command!");
+                        }
+                    } else {
+                        sender.sendMessage(ChatColor.RED + "[RPlace Moderation] Unknown command!");
+                        return true;
+                    }
+                } else {
+                    if (player.hasPermission("rplace.admin")) {
+                        RPlace.canvasGUI.open(player);
+                        return true;
+                    }
+                }
             }
-        } else {
-            C.consoleNotAllowed(sender);
         }
         return true;
     }
 
     @EventHandler
     void onInteract(PlayerInteractEvent event) {
-        if(event.getItem() == null) return;
-        if(!Objects.equals(event.getItem(), canvasCreatorItem)) return;
-        Location loc = Objects.requireNonNull(event.getClickedBlock()).getLocation();
-        Player player = event.getPlayer();
-        if(!player.hasPermission("rplace.admin")) return;
-        Action action = event.getAction();
-        if(action == Action.LEFT_CLICK_BLOCK) {
-            posList.set(0, loc);
-            player.sendMessage("Pos 1 set");
-        }
-        if(action == Action.RIGHT_CLICK_BLOCK) {
-            posList.set(1, loc);
-            player.sendMessage("Pos 2 set");
-        }
-
-
-    }
-
-    private void createCanvas() {
-        if (posList.size() == 2) {
-            Canvas canvas = new Canvas("test", new Zone(posList.get(0), posList.get(1)));
-            canvas.create();
+        if(!event.hasItem()) return;
+        if(!event.getItem().hasItemMeta()) return;
+        if(event.getItem().getItemMeta().getDisplayName().equals(modItem.getItemMeta().getDisplayName())) {
+            if(RPlace.playersInCanvas.contains(event.getPlayer().getUniqueId()) && event.getPlayer().hasPermission("rplace.moderator")) {
+                Block block = event.getClickedBlock();
+                block.setType(Material.WHITE_CONCRETE);
+            }
         }
     }
 }

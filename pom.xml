@@ -6,7 +6,7 @@
 
     <groupId>me.evilterabite</groupId>
     <artifactId>RPlace</artifactId>
-    <version>1.0.6</version>
+    <version>1.0.7alpha</version>
     <packaging>jar</packaging>
 
     <name>RPlace</name>

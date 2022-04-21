@@ -7,4 +7,6 @@ description: Reddit's R/Place subreddit from 2017 and 2022 in Minecraft
 
 commands:
   canvas:
-    description: Gives you the Canvas Creator Axe
+    description: Opens the canvas creation GUI
+  palette:
+    description: Opens the block palette GUI

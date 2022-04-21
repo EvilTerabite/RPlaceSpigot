@@ -3,6 +3,7 @@ package me.evilterabite.rplace.listeners;
 import me.evilterabite.rplace.RPlace;
 import me.evilterabite.rplace.events.PlayerEnterCanvasEvent;
 import me.evilterabite.rplace.events.PlayerLeaveCanvasEvent;
+import me.evilterabite.rplace.utils.C;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,14 +22,12 @@ public class CanvasListener implements Listener {
     void onEnterCanvas(PlayerEnterCanvasEvent event) {
         if(RPlace.canvas == null) return;
         RPlace.playersInCanvas.add(event.getPlayer().getUniqueId());
-
         storePlayerContents(event.getPlayer());
-        event.getPlayer().sendMessage("You entered the canvas! We stored your items for now!");
-        ItemStack[] hotbar = new ItemStack[RPlace.whitelistedBlocks.size() + 1];
-        for (int i = 0; i < RPlace.whitelistedBlocks.size(); i++) {
-            hotbar[i] = new ItemStack(RPlace.whitelistedBlocks.get(i));
+        event.getPlayer().sendMessage(C.canvasEnter());
+        if(C.invisPlayer()) {
+            event.getPlayer().setInvisible(true);
         }
-        event.getPlayer().getInventory().setContents(hotbar);
+        RPlace.paletteGUI.open(event.getPlayer());
 
     }
 
@@ -38,7 +37,10 @@ public class CanvasListener implements Listener {
         RPlace.playersInCanvas.remove(event.getPlayer().getUniqueId());
 
         restorePlayerContents(event.getPlayer());
-        event.getPlayer().sendMessage("You left the canvas... here's your items!");
+        event.getPlayer().sendMessage(C.canvasLeave());
+        if(C.invisPlayer()) {
+            event.getPlayer().setInvisible(false);
+        }
     }
 
     public static void storePlayerContents(Player player) {
