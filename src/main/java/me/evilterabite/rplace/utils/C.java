@@ -46,4 +46,8 @@ public class C {
     public static Boolean invisPlayer() {
         return config.getBoolean("invis_player");
     }
+
+    public static int canvasZoneLimit() {
+        return config.getInt("canvas_zone_limits");
+    }
 }

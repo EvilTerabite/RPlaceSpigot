@@ -1,10 +1,13 @@
 package me.evilterabite.rplace.listeners;
 
 import me.evilterabite.rplace.RPlace;
+import me.evilterabite.rplace.commands.CanvasCommand;
 import me.evilterabite.rplace.events.PlayerEnterCanvasEvent;
 import me.evilterabite.rplace.events.PlayerLeaveCanvasEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -53,6 +56,21 @@ public class PlayerListener implements Listener {
         if(RPlace.playersInCanvas.contains(event.getPlayer().getUniqueId())) {
             event.getPlayer().sendMessage("Please leave the canvas before teleporting out!");
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    void onPlayerInteract(PlayerInteractEvent event) {
+        if(!event.hasItem()) return;
+        if(!event.getItem().hasItemMeta()) return;
+        if(event.getItem().getItemMeta().getDisplayName().equals(CanvasCommand.modItem.getItemMeta().getDisplayName())) {
+            if(RPlace.playersInCanvas.contains(event.getPlayer().getUniqueId()) && event.getPlayer().hasPermission("rplace.moderator")) {
+                Block block = event.getClickedBlock();
+                block.setType(Material.WHITE_CONCRETE);
+            }
+        }
+        if(event.getItem().getItemMeta().getDisplayName().equals(CanvasListener.paletteItem.getItemMeta().getDisplayName())) {
+            RPlace.paletteGUI.open(event.getPlayer());
         }
     }
 }

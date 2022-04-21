@@ -2,6 +2,7 @@ package me.evilterabite.rplace.libraries;
 
 import me.evilterabite.rplace.RPlace;
 import me.evilterabite.rplace.events.CanvasCreateEvent;
+import me.evilterabite.rplace.utils.C;
 import me.evilterabite.rplace.utils.Zone;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -51,18 +52,17 @@ public class Canvas {
         store();
         RPlace.canvas = this;
         RPlace.canvasZone = new Zone(
-                new Location(zone.getWorld(), zone.getMaxX(), zone.getMaxY() + 50, zone.getMaxZ()),
-                new Location(zone.getWorld(), zone.getMinX(), zone.getMinY() - 50, zone.getMinZ())
+                new Location(zone.getWorld(), zone.getMaxX(), zone.getMaxY() + C.canvasZoneLimit(), zone.getMaxZ()),
+                new Location(zone.getWorld(), zone.getMinX(), zone.getMinY() - C.canvasZoneLimit(), zone.getMinZ())
         );
         Bukkit.getPluginManager().callEvent(new CanvasCreateEvent(this));
     }
 
     public void recover() {
-        RPlace.getInstance().reloadConfig();
         RPlace.canvas = this;
         RPlace.canvasZone = new Zone(
-                new Location(zone.getWorld(), zone.getMinX(), zone.getMinY() - 50, zone.getMinZ()),
-                new Location(zone.getWorld(), zone.getMaxX(), zone.getMaxY() + 50, zone.getMaxZ())
+                new Location(zone.getWorld(), zone.getMinX(), zone.getMinY() - C.canvasZoneLimit(), zone.getMinZ()),
+                new Location(zone.getWorld(), zone.getMaxX(), zone.getMaxY() + C.canvasZoneLimit(), zone.getMaxZ())
         );
     }
 

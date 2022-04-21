@@ -56,16 +56,4 @@ public class CanvasCommand implements CommandExecutor, Listener {
         }
         return true;
     }
-
-    @EventHandler
-    void onInteract(PlayerInteractEvent event) {
-        if(!event.hasItem()) return;
-        if(!event.getItem().hasItemMeta()) return;
-        if(event.getItem().getItemMeta().getDisplayName().equals(modItem.getItemMeta().getDisplayName())) {
-            if(RPlace.playersInCanvas.contains(event.getPlayer().getUniqueId()) && event.getPlayer().hasPermission("rplace.moderator")) {
-                Block block = event.getClickedBlock();
-                block.setType(Material.WHITE_CONCRETE);
-            }
-        }
-    }
 }

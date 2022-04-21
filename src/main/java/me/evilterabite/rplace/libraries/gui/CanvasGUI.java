@@ -53,12 +53,12 @@ public class CanvasGUI implements Listener {
             if (posOne == null) {
                 setPos1 = ItemCreator.create(Material.RED_CONCRETE, ChatColor.RED + "Position 1 not set", "Click here to set position 1 to where you are standing!");
             } else {
-                setPos1 = ItemCreator.create(Material.GREEN_CONCRETE, ChatColor.RED + "Position 1 is set!", "Click here to set position 1 to where you are standing!");
+                setPos1 = ItemCreator.create(Material.GREEN_CONCRETE, ChatColor.GREEN + "Position 1 is set!", "Click here to clear position 1!");
             }
             if (posTwo == null) {
-                setPos2 = ItemCreator.create(Material.RED_CONCRETE, ChatColor.GREEN + "Position 2 not set", "Click here to set position 2 to where you are standing!");
+                setPos2 = ItemCreator.create(Material.RED_CONCRETE, ChatColor.RED + "Position 2 not set", "Click here to set position 2 to where you are standing!");
             } else {
-                setPos2 = ItemCreator.create(Material.GREEN_CONCRETE, ChatColor.GREEN + "Position 2 is set!", "Click here to set position 2 to where you are standing!");
+                setPos2 = ItemCreator.create(Material.GREEN_CONCRETE, ChatColor.GREEN + "Position 2 is set!", "Click here to clear position 2!");
             }
 
             ItemStack createCanvas;
@@ -86,11 +86,19 @@ public class CanvasGUI implements Listener {
         Player player = (Player) event.getWhoClicked();
         if(RPlace.canvas == null && RPlace.canvasZone == null) {
             if (slot == 0) {
-                posOne = player.getLocation().subtract(0, 1, 0);
+                if(posOne == null) {
+                    posOne = player.getLocation().subtract(0, 1, 0);
+                } else {
+                    posOne = null;
+                }
                 update();
             }
             if (slot == 1) {
-                posTwo = player.getLocation().subtract(0, 1, 0);
+                if(posTwo == null) {
+                    posTwo = player.getLocation().subtract(0, 1, 0);
+                } else {
+                    posTwo = null;
+                }
                 update();
             }
 

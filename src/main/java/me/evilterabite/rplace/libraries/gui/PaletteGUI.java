@@ -45,7 +45,7 @@ public class PaletteGUI implements Listener {
         if(slotMap.containsKey(event.getSlot())) {
             Player player = (Player) event.getWhoClicked();
             ItemStack item = slotMap.get(event.getSlot());
-            player.getInventory().setItem(0, item);
+            player.getInventory().setItem(1, item);
             player.closeInventory();
         }
         event.setCancelled(true);

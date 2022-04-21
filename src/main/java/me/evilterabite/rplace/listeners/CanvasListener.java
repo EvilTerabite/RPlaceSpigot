@@ -4,6 +4,8 @@ import me.evilterabite.rplace.RPlace;
 import me.evilterabite.rplace.events.PlayerEnterCanvasEvent;
 import me.evilterabite.rplace.events.PlayerLeaveCanvasEvent;
 import me.evilterabite.rplace.utils.C;
+import me.evilterabite.rplace.utils.ItemCreator;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,6 +19,7 @@ public class CanvasListener implements Listener {
 
     public static HashMap<UUID, ItemStack[]> playerInventoryMap = new HashMap<>();
     public static HashMap<UUID, ItemStack[]> playerArmourMap = new HashMap<>();
+    public static ItemStack paletteItem = ItemCreator.create(Material.CHEST, ChatColor.LIGHT_PURPLE + "Open the Block Palette", "");
 
     @EventHandler
     void onEnterCanvas(PlayerEnterCanvasEvent event) {
@@ -27,8 +30,7 @@ public class CanvasListener implements Listener {
         if(C.invisPlayer()) {
             event.getPlayer().setInvisible(true);
         }
-        RPlace.paletteGUI.open(event.getPlayer());
-
+        event.getPlayer().getInventory().setItem(0, paletteItem);
     }
 
     @EventHandler

@@ -17,6 +17,8 @@ public class Zone {
     private int maxY;
     private int minZ;
     private int maxZ;
+    private Location loc1;
+    private Location loc2;
 
     public Zone(Location loc1, Location loc2) {
         this(loc1.getWorld(), loc1.getBlockX(), loc1.getBlockY(), loc1.getBlockZ(), loc2.getBlockX(), loc2.getBlockY(), loc2.getBlockZ());
@@ -31,6 +33,8 @@ public class Zone {
         maxX = Math.max(x1, x2);
         maxY = Math.max(y1, y2);
         maxZ = Math.max(z1, z2);
+        this.loc1 = new Location(world ,x1, y1, z1);
+        this.loc2 = new Location(world, x2, y2, z2);
     }
 
     public World getWorld() {
@@ -179,5 +183,21 @@ public class Zone {
         }
 
         return blocks;
+    }
+
+    public Location getLoc1() {
+        return loc1;
+    }
+
+    public void setLoc1(Location loc1) {
+        this.loc1 = loc1;
+    }
+
+    public Location getLoc2() {
+        return loc2;
+    }
+
+    public void setLoc2(Location loc2) {
+        this.loc2 = loc2;
     }
 }

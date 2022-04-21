@@ -15,9 +15,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -35,37 +35,20 @@ public final class RPlace extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        new UpdateChecker(this, 101481).getVersion(version -> {
-            updateAvailable = !this.getDescription().getVersion().equals(version);
-            if(updateAvailable) {
-                getLogger().log(Level.WARNING, "Update Available! Stay updated to keep your server BUG-FREE!");
-            }
-        });
         canvasGUI = new CanvasGUI();
         paletteGUI = new PaletteGUI();
-        saveDefaultConfig();
-        if(!Objects.requireNonNull(getConfig().getString("canvas")).equalsIgnoreCase("null")) {
-            canvas = Canvas.deserialize(Objects.requireNonNull(getConfig().getString("canvas")));
-            assert canvas != null;
-            canvas.recover();
-        }
         whitelistedBlocks = new ArrayList<>();
         playersInCanvas = new ArrayList<>();
         timedPlayers = new ArrayList<>();
         registerCommands();
         registerListeners();
 
-        for(String s : getConfig().getStringList("canvas_blocks")) {
-            Material mat = null;
-            try {
-                mat = Material.getMaterial(s);
-            } catch (NullPointerException e) {
-                getLogger().log(Level.SEVERE, "There is an error with the canvas_blocks list! Check the config to make sure you set it up correctly!");
-                e.printStackTrace();
-            }
+        loadWhitelistedBlocks();
+        loadCanvas();
+        checkForUpdates();
 
-            whitelistedBlocks.add(mat);
-        }
+        saveDefaultConfig();
+
 
     }
 
@@ -73,8 +56,10 @@ public final class RPlace extends JavaPlugin {
     public void onDisable() {
         for(Player player : Bukkit.getOnlinePlayers()) {
             CanvasListener.restorePlayerContents(player);
-            getLogger().log(Level.FINE, "Restored Player Inventories");
         }
+        getLogger().log(Level.FINE, "Restored Player Inventories");
+
+        canvas.store();
     }
 
     private void registerCommands() {
@@ -92,5 +77,41 @@ public final class RPlace extends JavaPlugin {
 
     public static RPlace getInstance() {
         return RPlace.getPlugin(RPlace.class);
+    }
+
+    public void loadCanvas() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if(!Objects.requireNonNull(getConfig().getString("canvas")).equalsIgnoreCase("null")) {
+                    canvas = Canvas.deserialize(Objects.requireNonNull(getConfig().getString("canvas")));
+                    assert canvas != null;
+                    canvas.recover();
+                }
+            }
+        }.runTaskLater(this, 0);
+    }
+
+    public void checkForUpdates() {
+        new UpdateChecker(this, 101481).getVersion(version -> {
+            updateAvailable = !this.getDescription().getVersion().equals(version);
+            if(updateAvailable) {
+                getLogger().log(Level.WARNING, "Update Available! Stay updated to keep your server BUG-FREE!");
+            }
+        });
+    }
+
+    public void loadWhitelistedBlocks() {
+        for(String s : getConfig().getStringList("canvas_blocks")) {
+            Material mat = null;
+            try {
+                mat = Material.getMaterial(s);
+            } catch (NullPointerException e) {
+                getLogger().log(Level.SEVERE, "There is an error with the canvas_blocks list! Check the config to make sure you set it up correctly!");
+                e.printStackTrace();
+            }
+
+            whitelistedBlocks.add(mat);
+        }
     }
 }
