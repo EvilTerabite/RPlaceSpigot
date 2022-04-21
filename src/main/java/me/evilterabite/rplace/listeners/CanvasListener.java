@@ -24,17 +24,10 @@ public class CanvasListener implements Listener {
 
         storePlayerContents(event.getPlayer());
         event.getPlayer().sendMessage("You entered the canvas! We stored your items for now!");
-        ItemStack[] hotbar = {
-                new ItemStack(Material.BLACK_WOOL),
-                new ItemStack(Material.WHITE_WOOL),
-                new ItemStack(Material.ORANGE_WOOL),
-                new ItemStack(Material.MAGENTA_WOOL),
-                new ItemStack(Material.LIGHT_BLUE_WOOL),
-                new ItemStack(Material.YELLOW_WOOL),
-                new ItemStack(Material.GREEN_WOOL),
-                new ItemStack(Material.PINK_WOOL),
-                new ItemStack(Material.BROWN_WOOL)
-        };
+        ItemStack[] hotbar = new ItemStack[RPlace.whitelistedBlocks.size() + 1];
+        for (int i = 0; i < RPlace.whitelistedBlocks.size(); i++) {
+            hotbar[i] = new ItemStack(RPlace.whitelistedBlocks.get(i));
+        }
         event.getPlayer().getInventory().setContents(hotbar);
 
     }

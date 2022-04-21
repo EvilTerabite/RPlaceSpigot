@@ -6,11 +6,11 @@ import me.evilterabite.rplace.libraries.gui.CanvasGUI;
 import me.evilterabite.rplace.listeners.BlockListener;
 import me.evilterabite.rplace.listeners.CanvasListener;
 import me.evilterabite.rplace.listeners.PlayerListener;
+import me.evilterabite.rplace.utils.UpdateChecker;
 import me.evilterabite.rplace.utils.Zone;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -28,9 +28,16 @@ public final class RPlace extends JavaPlugin {
     public static ArrayList<UUID> playersInCanvas;
     public static ArrayList<UUID> timedPlayers;
     public static ArrayList<Material> whitelistedBlocks;
+    public static boolean updateAvailable;
 
     @Override
     public void onEnable() {
+        new UpdateChecker(this, 101481).getVersion(version -> {
+            updateAvailable = !this.getDescription().getVersion().equals(version);
+            if(updateAvailable) {
+                getLogger().log(Level.WARNING, "Update Available! Stay updated to keep your server BUG-FREE!");
+            }
+        });
         canvasGUI = new CanvasGUI();
         saveDefaultConfig();
         if(!Objects.requireNonNull(getConfig().getString("canvas")).equalsIgnoreCase("null")) {
@@ -46,15 +53,24 @@ public final class RPlace extends JavaPlugin {
 
 
         whitelistedBlocks.addAll(Arrays.asList(
+                Material.CYAN_WOOL,
+                Material.PURPLE_WOOL,
+                Material.BLUE_WOOL,
+                Material.BROWN_WOOL,
+                Material.GREEN_WOOL,
+                Material.RED_WOOL,
                 Material.BLACK_WOOL,
+                Material.GRAY_WOOL,
+                Material.LIGHT_GRAY_WOOL,
                 Material.WHITE_WOOL,
                 Material.ORANGE_WOOL,
-                Material.MAGENTA_WOOL,
+                Material.PINK_WOOL,
                 Material.LIGHT_BLUE_WOOL,
                 Material.YELLOW_WOOL,
-                Material.GREEN_WOOL,
-                Material.PINK_WOOL,
-                Material.BROWN_WOOL)
+                Material.LIME_WOOL,
+                Material.MAGENTA_WOOL
+
+                )
         );
 
     }

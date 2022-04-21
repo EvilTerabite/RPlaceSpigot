@@ -2,7 +2,6 @@ package me.evilterabite.rplace.libraries;
 
 import me.evilterabite.rplace.RPlace;
 import me.evilterabite.rplace.events.CanvasCreateEvent;
-import me.evilterabite.rplace.libraries.gui.CanvasGUI;
 import me.evilterabite.rplace.utils.Zone;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

@@ -27,6 +27,7 @@ public class BlockListener implements Listener {
     void onBlockBreak(BlockBreakEvent event) {
         if (RPlace.canvas == null) return;
         Block block = event.getBlock();
+        if(RPlace.canvas.getZone().getWorld() != block.getLocation().getWorld()) return;
         if (RPlace.canvas.getZone().contains(block.getLocation())) {
             event.getPlayer().sendMessage("This block is part of the canvas and cannot be broken!");
             event.setCancelled(true);
@@ -35,12 +36,13 @@ public class BlockListener implements Listener {
 
     @EventHandler
     void onBlockPlace(BlockPlaceEvent event) {
-        if(RPlace.canvas == null) return;
+        if (RPlace.canvas == null) return;
         Block block = event.getBlock();
+        if(RPlace.canvas.getZone().getWorld() != block.getLocation().getWorld()) return;
         Player player = event.getPlayer();
-        if(RPlace.canvasZone.contains(block.getLocation())) {
-            if(RPlace.playersInCanvas.contains(player.getUniqueId())) {
-                if(RPlace.whitelistedBlocks.contains(block.getType())) {
+        if (RPlace.playersInCanvas.contains(player.getUniqueId())) {
+            if (RPlace.canvasZone.contains(block.getLocation())) {
+                if (RPlace.whitelistedBlocks.contains(block.getType())) {
                     if (!RPlace.timedPlayers.contains(player.getUniqueId())) {
                         Objects.requireNonNull(RPlace.canvas.getZone().getWorld()).getBlockAt(block.getLocation().subtract(0, 1, 0)).setType(block.getType());
                         RPlace.timedPlayers.add(player.getUniqueId());
@@ -59,7 +61,7 @@ public class BlockListener implements Listener {
                                     cancel();
                                 } else {
                                     if (RPlace.playersInCanvas.contains(player.getUniqueId())) {
-                                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(String.format("%02d:%02d", mins, seconds), ChatColor.DARK_BLUE));
+                                        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(String.format(ChatColor.DARK_BLUE + "%02d:%02d", mins, seconds)));
                                     }
                                     time--;
                                 }
@@ -71,12 +73,16 @@ public class BlockListener implements Listener {
                     }
                 }
             } else {
-                player.sendMessage("You cannot place blocks inside the canvas from the outside... You need to be on the canvas to place blocks.");
+                player.sendMessage("You cannot place blocks outside of the canvas!");
             }
-        } else {
-            player.sendMessage("You cannot place blocks outside of the canvas!");
+            event.setCancelled(true);
         }
-        event.setCancelled(true);
+
+        if(!RPlace.playersInCanvas.contains(player.getUniqueId()) && RPlace.canvasZone.contains(block.getLocation())) {
+            if(RPlace.canvas.getZone().getWorld() != block.getLocation().getWorld()) return;
+            event.setCancelled(true);
+            player.sendMessage("You cannot place blocks inside the canvas from outside the canvas!");
+        }
     }
 
 

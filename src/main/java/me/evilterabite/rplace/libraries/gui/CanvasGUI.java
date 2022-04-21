@@ -56,9 +56,9 @@ public class CanvasGUI implements Listener {
                 setPos1 = ItemCreator.create(Material.GREEN_CONCRETE, ChatColor.RED + "Position 1 is set!", "Click here to set position 1 to where you are standing!");
             }
             if (posTwo == null) {
-                setPos2 = ItemCreator.create(Material.RED_CONCRETE, ChatColor.RED + "Position 2 not set", "Click here to set position 2 to where you are standing!");
+                setPos2 = ItemCreator.create(Material.RED_CONCRETE, ChatColor.GREEN + "Position 2 not set", "Click here to set position 2 to where you are standing!");
             } else {
-                setPos2 = ItemCreator.create(Material.GREEN_CONCRETE, ChatColor.RED + "Position 2 is set!", "Click here to set position 2 to where you are standing!");
+                setPos2 = ItemCreator.create(Material.GREEN_CONCRETE, ChatColor.GREEN + "Position 2 is set!", "Click here to set position 2 to where you are standing!");
             }
 
             ItemStack createCanvas;
