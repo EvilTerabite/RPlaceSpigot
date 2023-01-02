@@ -2,7 +2,10 @@ package me.evilterabite.rplace;
 
 import me.evilterabite.rplace.commands.CanvasCommand;
 import me.evilterabite.rplace.commands.PaletteCommand;
+import me.evilterabite.rplace.files.PlayerDataConfiguration;
 import me.evilterabite.rplace.libraries.Canvas;
+import me.evilterabite.rplace.libraries.Pixel;
+import me.evilterabite.rplace.libraries.PlacePlayer;
 import me.evilterabite.rplace.libraries.gui.CanvasGUI;
 import me.evilterabite.rplace.libraries.gui.PaletteGUI;
 import me.evilterabite.rplace.listeners.BlockListener;
@@ -12,14 +15,13 @@ import me.evilterabite.rplace.utils.UpdateChecker;
 import me.evilterabite.rplace.utils.Zone;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 public final class RPlace extends JavaPlugin {
@@ -31,15 +33,20 @@ public final class RPlace extends JavaPlugin {
     public static ArrayList<UUID> playersInCanvas;
     public static ArrayList<UUID> timedPlayers;
     public static ArrayList<Material> whitelistedBlocks;
+    private static PlayerDataConfiguration playerDataConfiguration;
+    public static HashMap<PlacePlayer, List<Pixel>> playerPixelMap;
     public static boolean updateAvailable;
 
     @Override
     public void onEnable() {
+        playerPixelMap = new HashMap<>();
+        playerPixelMap = new HashMap<>();
         canvasGUI = new CanvasGUI();
         paletteGUI = new PaletteGUI();
         whitelistedBlocks = new ArrayList<>();
         playersInCanvas = new ArrayList<>();
         timedPlayers = new ArrayList<>();
+        playerDataConfiguration = new PlayerDataConfiguration();
         registerCommands();
         registerListeners();
 
@@ -113,5 +120,9 @@ public final class RPlace extends JavaPlugin {
 
             whitelistedBlocks.add(mat);
         }
+    }
+
+    public FileConfiguration getPlayerData() {
+        return playerDataConfiguration.get();
     }
 }

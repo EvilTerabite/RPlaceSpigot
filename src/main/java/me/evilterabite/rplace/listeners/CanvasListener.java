@@ -1,8 +1,8 @@
 package me.evilterabite.rplace.listeners;
 
 import me.evilterabite.rplace.RPlace;
-import me.evilterabite.rplace.events.PlayerEnterCanvasEvent;
-import me.evilterabite.rplace.events.PlayerLeaveCanvasEvent;
+import me.evilterabite.rplace.events.player.PlayerEnterCanvasEvent;
+import me.evilterabite.rplace.events.player.PlayerLeaveCanvasEvent;
 import me.evilterabite.rplace.utils.C;
 import me.evilterabite.rplace.utils.ItemCreator;
 import org.bukkit.ChatColor;

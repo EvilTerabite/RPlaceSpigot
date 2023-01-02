@@ -1,7 +1,7 @@
 package me.evilterabite.rplace.listeners;
 
 import me.evilterabite.rplace.RPlace;
-import me.evilterabite.rplace.libraries.Canvas;
+import me.evilterabite.rplace.events.player.PlayerCreatePixelEvent;
 import me.evilterabite.rplace.libraries.gui.CanvasGUI;
 import me.evilterabite.rplace.libraries.gui.PaletteGUI;
 import me.evilterabite.rplace.utils.C;
@@ -17,12 +17,11 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.awt.*;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Objects;
 
 public class BlockListener implements Listener {
@@ -50,6 +49,7 @@ public class BlockListener implements Listener {
                     if (!RPlace.timedPlayers.contains(player.getUniqueId())) {
                         if(RPlace.canvas.getZone().contains(block.getLocation().subtract(0, 1, 0))) {
                             Objects.requireNonNull(RPlace.canvas.getZone().getWorld()).getBlockAt(block.getLocation().subtract(0, 1, 0)).setType(block.getType());
+                            Bukkit.getPluginManager().callEvent(new PlayerCreatePixelEvent(player,block, System.currentTimeMillis()));
                             RPlace.timedPlayers.add(player.getUniqueId());
                             Bukkit.getScheduler().runTaskLater(RPlace.getPlugin(RPlace.class), () -> {
                                 RPlace.timedPlayers.remove(player.getUniqueId());

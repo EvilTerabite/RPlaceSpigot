@@ -1,4 +1,4 @@
-package me.evilterabite.rplace.events;
+package me.evilterabite.rplace.events.player;
 
 import me.evilterabite.rplace.libraries.Canvas;
 import org.bukkit.entity.Player;
@@ -6,14 +6,14 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-public class PlayerEnterCanvasEvent extends Event {
+public class PlayerLeaveCanvasEvent extends Event {
 
     public static HandlerList HANDLERS = new HandlerList();
 
     private final Player player;
     private boolean cancelled;
 
-    public PlayerEnterCanvasEvent(Player player) {
+    public PlayerLeaveCanvasEvent(Player player) {
         this.player = player;
         cancelled = false;
     }

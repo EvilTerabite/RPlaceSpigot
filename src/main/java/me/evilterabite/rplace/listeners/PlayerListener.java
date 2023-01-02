@@ -2,10 +2,10 @@ package me.evilterabite.rplace.listeners;
 
 import me.evilterabite.rplace.RPlace;
 import me.evilterabite.rplace.commands.CanvasCommand;
-import me.evilterabite.rplace.events.PlayerEnterCanvasEvent;
-import me.evilterabite.rplace.events.PlayerLeaveCanvasEvent;
+import me.evilterabite.rplace.events.player.PlayerEnterCanvasEvent;
+import me.evilterabite.rplace.events.player.PlayerLeaveCanvasEvent;
+import me.evilterabite.rplace.libraries.PlacePlayer;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -16,6 +16,11 @@ import org.bukkit.event.player.*;
 import java.util.logging.Level;
 
 public class PlayerListener implements Listener {
+
+    @EventHandler
+    void onPlayerJoin(PlayerJoinEvent event) {
+
+    }
 
     @EventHandler
     void onPlayerMove(PlayerMoveEvent event) {

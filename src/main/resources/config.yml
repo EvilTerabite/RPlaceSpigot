@@ -34,6 +34,5 @@ msg_canvasenter: "&aYou entered the canvas!"
 msg_canvasleave: "&cYou left the canvas!"
 msg_noteleport: "&cPlease leave the canvas before teleporting out."
 
-
 ##Do not touch this unless you know what you are doing!
 canvas: "null"
